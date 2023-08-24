@@ -1,4 +1,4 @@
-package com.example.testjavafx;
+package com.example.testjavafx.startUps;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -6,7 +6,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.InetAddress;
 
 public class ChatApplication extends Application {
 

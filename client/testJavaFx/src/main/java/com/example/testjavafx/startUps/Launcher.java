@@ -1,4 +1,4 @@
-package com.example.testjavafx;
+package com.example.testjavafx.startUps;
 
 public class Launcher {
     public static void main(String[] args)

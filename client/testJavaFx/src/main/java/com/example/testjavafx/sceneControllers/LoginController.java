@@ -1,5 +1,6 @@
-package com.example.testjavafx;
+package com.example.testjavafx.sceneControllers;
 
+import com.example.testjavafx.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -42,6 +43,7 @@ public class LoginController {
 
         String resp = HttpClient.newHttpClient().send(rq, HttpResponse.BodyHandlers.ofString()).body();
         if(resp.equals("OK")){
+            User.name = username;
             Stage stage = (Stage) tf_username.getScene().getWindow();
             stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("ChatScene.fxml"))));
         } else
@@ -50,8 +52,6 @@ public class LoginController {
 
     public void back() throws IOException
     {
-        ServerConnector.out.println("|back");
-
         Stage stage = (Stage) tf_username.getScene().getWindow();
         stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("WelcomeScene.fxml"))));
     }

@@ -1,4 +1,4 @@
-package com.example.testjavafx;
+package com.example.testjavafx.sceneControllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
