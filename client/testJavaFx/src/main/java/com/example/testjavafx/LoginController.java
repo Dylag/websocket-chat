@@ -5,13 +5,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 
-public class AuthController {
+public class LoginController {
 
     @FXML
     TextField tf_username;
@@ -20,27 +24,28 @@ public class AuthController {
     PasswordField pf_password;
 
     @FXML
-    public void initialize(){
-        ServerConnector.out.println("log");
-    }
-
-    @FXML
-    public void auth() throws IOException
-    {
+    public void auth() throws IOException, InterruptedException {
         String username = tf_username.getText();
         String password = pf_password.getText();
 
+        String body = String.format("""
+                                        {
+                                            "name":"%s",
+                                            "password":"%s"
+                                        }""",username,password);
 
-        ServerConnector.out.println(username + "|" + password);
-        String response = ServerConnector.in.readLine();
-        System.out.println(response);
-        if(response.equals("yes")) {
-            User.name = username;
-            System.out.println("logged");
+        HttpRequest rq = HttpRequest.newBuilder(URI.create("http://localhost:8080/auth/login"))
+                .header("Content-Type","application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .timeout(Duration.ofSeconds(5))
+                .build();
+
+        String resp = HttpClient.newHttpClient().send(rq, HttpResponse.BodyHandlers.ofString()).body();
+        if(resp.equals("OK")){
             Stage stage = (Stage) tf_username.getScene().getWindow();
             stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("ChatScene.fxml"))));
         } else
-            showError("Some error");
+            showError(resp);
     }
 
     public void back() throws IOException

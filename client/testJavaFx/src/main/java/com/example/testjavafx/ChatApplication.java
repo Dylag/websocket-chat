@@ -14,7 +14,7 @@ public class ChatApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(ChatApplication.class.getResource("ConnectingScene.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(ChatApplication.class.getResource("WelcomeScene.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Sample chat app");
         stage.setScene(scene);

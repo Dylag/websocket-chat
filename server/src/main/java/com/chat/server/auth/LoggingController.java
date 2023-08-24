@@ -17,13 +17,15 @@ public class LoggingController {
     }
 
 
-    @GetMapping
+    @PostMapping(path = "/login")
     public String login(@RequestBody User user){
+        //returns "OK" when login successful
         return service.login(user);
     }
 
-    @PutMapping
+    @PostMapping(path ="/reg")
     public String reg(@RequestBody User user){
+        //returns "OK" when reg successful
         return service.reg(user);
     }
 

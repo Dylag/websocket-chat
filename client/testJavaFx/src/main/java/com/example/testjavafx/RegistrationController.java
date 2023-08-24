@@ -9,6 +9,11 @@ import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 
 public class RegistrationController {
 
@@ -18,36 +23,38 @@ public class RegistrationController {
     public PasswordField pf_password;
 
     @FXML
-    public void initialize(){
-        ServerConnector.out.println("reg");
-    }
-
-    @FXML
-    public void registration() throws IOException {
+    public void registration() throws Exception {
         String username = ta_username.getText();
         String password = pf_password.getText();
+        String body = String.format("""
+                                        {
+                                            "name":"%s",
+                                            "password":"%s"
+                                        }""",username,password);
 
-        ServerConnector.out.println(username + "|" + password);
-        String response = ServerConnector.in.readLine();
-        if(response.equals("no"))
-            showError();
-        else
-        {
+
+        HttpRequest request = HttpRequest.newBuilder(URI.create("http://localhost:8080/auth/reg"))
+                .header("Content-Type","application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .timeout(Duration.ofSeconds(5))
+                .build();
+
+        if(HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString()).body().equals("OK")){
             User.name = username;
             Stage stage = (Stage) ta_username.getScene().getWindow();
             stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("ChatScene.fxml"))));
-        }
+        } else
+            showError();
 
     }
 
     @FXML
     public void back() throws IOException
     {
-        ServerConnector.out.println("|back");
-
         Stage stage = (Stage) ta_username.getScene().getWindow();
-        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("WelcomeScene.fxml"))));
+        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("WelcomeScene"))));
     }
+
 
     private void showError()
     {
